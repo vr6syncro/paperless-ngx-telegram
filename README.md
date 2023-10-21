@@ -1,3 +1,5 @@
+![alt Telegram]([http://url/to/img.png](https://vr6-syncro.de/paperless_telegram.png))
+
 # Paperless-NGX-Telegram German
 
 **Hinweis:** Dies ist ein Post-Consumption-Skript für Paperlexx NGX, das bei erfolgreicher Verarbeitung eines neuen Dokuments eine konfigurierbare Telegram-Nachricht sendet.
