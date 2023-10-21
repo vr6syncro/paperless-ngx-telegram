@@ -1,4 +1,4 @@
-![alt Telegram]([http://url/to/img.png](https://vr6-syncro.de/paperless_telegram.png))
+![alt Telegram](https://vr6-syncro.de/paperless_telegram.png)
 
 # Paperless-NGX-Telegram German
 
