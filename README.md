@@ -17,14 +17,7 @@
    sudo chmod +x /dein/pfad/telegram_de.py
    ```
 
-3. Installiere die erforderlichen Python-Pakete.
-
-   ```bash
-   pip3 install requests
-   pip3 install python-telegram-bot
-   ```
-
-4. Konfiguriere das Skript:
+3. Konfiguriere das Skript:
 
    - `base_url` sollte die IP-Adresse deines Servers oder deine Domain sein.
 
@@ -56,14 +49,7 @@
    sudo chmod +x /your/path/telegram_en.py
    ```
 
-3. Install the required Python packages.
-
-   ```bash
-   pip3 install requests
-   pip3 install python-telegram-bot
-   ```
-
-4. Configure the script:
+3. Configure the script:
 
    - `base_url` should be your server's IP address or domain.
 
