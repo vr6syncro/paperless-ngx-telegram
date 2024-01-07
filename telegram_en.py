@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import os
-import requests
+import httpx
 
 # Output configuration
 enable_document_id = True
@@ -39,11 +39,11 @@ def send_telegram_message_with_thumbnail(text, image_path):
 
     try:
         with open(image_path, 'rb') as image_file:
-            response = requests.post(telegram_url, params=params, files={'photo': image_file})
+            response = httpx.post(telegram_url, params=params, files={'photo': image_file})
 
-        response raise_for_status()
+        response.raise_for_status()
         print("Telegram notification sent with thumbnail.")
-    except requests.exceptions.RequestException as e:
+    except httpx.HTTPError as e:
         print(f"Error sending Telegram notification with thumbnail: {e}")
 
 def send_telegram_message(text):
@@ -55,10 +55,10 @@ def send_telegram_message(text):
     }
 
     try:
-        response = requests.post(telegram_url, params=params)
+        response = httpx.post(telegram_url, params=params)
         response.raise_for_status()
         print("Telegram notification sent without thumbnail.")
-    except requests.exceptions.RequestException as e:
+    except httpx.HTTPError as e:
         print(f"Error sending Telegram notification without thumbnail: {e}")
 
 # Environment variables from Paperless
@@ -79,7 +79,7 @@ document_passphrase = os.getenv("PASSPHRASE")
 message = "ℹ 📄 <b>New document has been processed:</b> \n\n"
 
 # Checking enable flags to determine which function to call
-if enable_document_id:
+if enable_document_id and document_id:
     message += f"Document ID: {document_id}\n\n"
 
 if enable_document_url:
@@ -90,41 +90,41 @@ if enable_download_url:
     download_url = f"{base_url}/api/documents/{document_id}/download/"
     message += f"<a href=\"{download_url}\">Download Document</a>\n\n"
 
-if enable_document_original_filename:
+if enable_document_original_filename and document_original_filename:
     message += f"Original Filename: {document_original_filename}\n\n"
 
-if enable_document_created:
+if enable_document_created and document_created:
     message += f"Created: {document_created}\n\n"
 
-if enable_document_added:
+if enable_document_added and document_added:
     message += f"Added: {document_added}\n\n"
 
-if enable_document_modified:
+if enable_document_modified and document_modified:
     message += f"Modified: {document_modified}\n\n"
 
-if enable_document_correspondent:
+if enable_document_correspondent and document_correspondent:
     message += f"Correspondent: {document_correspondent}\n\n"
 
-if enable_document_tags:
+if enable_document_tags and document_tags:
     message += f"Tags: {document_tags}\n\n"
 
-if enable_document_passphrase:
+if enable_document_passphrase and document_passphrase:
     message += f"Processed with Passphrase: {document_passphrase}\n\n"
 
-if enable_document_file_name:
+if enable_document_file_name and document_file_name:
     message += f"Generated File Name: {document_file_name}\n\n"
 
-if enable_document_source_path:
+if enable_document_source_path and document_source_path:
     message += f"Source Path: `{document_source_path}`\n\n"
 
-if enable_document_thumbnail_path:
+if enable_document_thumbnail_path and document_thumbnail_path:
     message += f"Thumbnail Path: `{document_thumbnail_path}`\n\n"
 
-if enable_document_download_url:
+if enable_document_download_url and document_download_url:
     message += f"Download URL: `{document_download_url}`\n\n"
 
 # Calling the correct function based on the enable_thumbnail flag
 if enable_thumbnail:
     send_telegram_message_with_thumbnail(message, document_thumbnail_path)
 else:
-    send_telegram_message(message)
+    send_telegram_message(message) 

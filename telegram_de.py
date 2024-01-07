@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import os
-import requests
+import httpx
 
 # Konfiguration der Ausgabe
 enable_document_id = True
@@ -16,19 +16,17 @@ enable_document_modified = False
 enable_document_download_url = False
 enable_document_passphrase = False
 
-
 # Thumbnail erzeugen
 enable_thumbnail = True
 
 # Paperless URL
 base_url = "YourIP/Domain"
-enable_document_url = False
-enable_download_url = False
+enable_document_url = True
+enable_download_url = True
 
-# Telegram Bot Configuration
+# Telegram Bot Konfiguration
 telegram_api_token = "YourTelegramBotToken"
 telegram_chat_id = "YourChatID"
-
 
 # Telegram Funktionen Ausführen
 def send_telegram_message_with_thumbnail(text, image_path):
@@ -41,11 +39,11 @@ def send_telegram_message_with_thumbnail(text, image_path):
 
     try:
         with open(image_path, 'rb') as image_file:
-            response = requests.post(telegram_url, params=params, files={'photo': image_file})
+            response = httpx.post(telegram_url, params=params, files={'photo': image_file})
 
         response.raise_for_status()
         print("Telegram-Benachrichtigung mit Thumbnail gesendet.")
-    except requests.exceptions.RequestException as e:
+    except httpx.HTTPError as e:
         print(f"Fehler beim Senden der Telegram-Benachrichtigung mit Thumbnail: {e}")
 
 def send_telegram_message(text):
@@ -57,10 +55,10 @@ def send_telegram_message(text):
     }
 
     try:
-        response = requests.post(telegram_url, params=params)
+        response = httpx.post(telegram_url, params=params)
         response.raise_for_status()
         print("Telegram-Benachrichtigung ohne Thumbnail gesendet.")
-    except requests.exceptions.RequestException as e:
+    except httpx.HTTPError as e:
         print(f"Fehler beim Senden der Telegram-Benachrichtigung ohne Thumbnail: {e}")
 
 # Umgebungsvariablen aus Paperless
@@ -81,7 +79,7 @@ document_passphrase = os.getenv("PASSPHRASE")
 message = "ℹ 📄 <b>Neues Dokument wurde verarbeitet:</b> \n\n"
 
 # Sie prüfen die enable-Flags, um zu entscheiden, welche Funktion aufgerufen wird
-if enable_document_id:
+if enable_document_id and document_id:
     message += f"Dokument-ID: {document_id}\n\n"
 	
 if enable_document_url:
@@ -92,37 +90,37 @@ if enable_download_url:
     download_url = f"{base_url}/api/documents/{document_id}/download/"
     message += f"<a href=\"{download_url}\">Dokument herunterladen</a>\n\n"
 
-if enable_document_original_filename:
+if enable_document_original_filename and document_original_filename:
     message += f"Originaler Dateiname: {document_original_filename}\n\n"
 
-if enable_document_created:
+if enable_document_created and document_created:
     message += f"Erstellt: {document_created}\n\n"
 	
-if enable_document_added:
+if enable_document_added and document_added:
     message += f"Hinzugefügt: {document_added}\n\n"
 
-if enable_document_modified:
+if enable_document_modified and document_modified:
     message += f"Geändert: {document_modified}\n\n"
 
-if enable_document_correspondent:
+if enable_document_correspondent and document_correspondent:
     message += f"Korrespondent: {document_correspondent}\n\n"
 
-if enable_document_tags:
+if enable_document_tags and document_tags:
     message += f"Tags: {document_tags}\n\n"
 
-if enable_document_passphrase:
+if enable_document_passphrase and document_passphrase:
     message += f"Verarbeitet mit Passphrase: {document_passphrase}\n\n"
 	
-if enable_document_file_name:
+if enable_document_file_name and document_file_name:
     message += f"Generierter Dateiname: {document_file_name}\n\n"
 	
-if enable_document_source_path:
+if enable_document_source_path and document_source_path:
     message += f"Quellpfad: `{document_source_path}`\n\n"
 
-if enable_document_thumbnail_path:
+if enable_document_thumbnail_path and document_thumbnail_path:
     message += f"Thumbnail-Pfad: `{document_thumbnail_path}`\n\n"
 	
-if enable_document_download_url:
+if enable_document_download_url and document_download_url:
     message += f"Download-URL: `{document_download_url}`\n\n"
 
 # Hier wird je nach enable_thumbnail-Flag die richtige Funktion aufgerufen
